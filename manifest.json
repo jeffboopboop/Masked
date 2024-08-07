@@ -1,0 +1,32 @@
+{
+    "manifest_version": 2,
+    "name": "Masked",
+    "version": "1.0",
+
+    "description": "Hides sensitive information on the screen such as API keys, OAuth2 cids/secrets, etc.",
+    "homepage_url": "https://google.ca",
+    "icons": {
+        "32": "icons/icons8-mask-32.png",
+	    "48": "icons/icons8-mask-48.png",
+	    "64": "icons/icons8-mask-64.png"
+    },
+
+    "permissions": [
+	"activeTab",
+	"storage"
+  ],
+
+    "browser_action": {
+      "default_icon": "icons/icons8-mask-32.png",
+      "default_title": "Masked",
+      "default_popup": "popup/popup.html"
+  },
+
+    "content_scripts": [{
+      "matches" : ["<all_urls>"],
+      "js": [
+        "js/masked.js"
+    ]
+  }]
+}
+
