@@ -56,7 +56,7 @@
     // v--Regex and some ID's --^ pulled from gitleaks
     // https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml
 
-    var regexes = [
+    var regex_list = [
         /(?:adafruit)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:{1,3}=|\|\|:|<=|=>|:|\?=)(?:'|\"|\s|=|\x60){0,5}([a-z0-9_-]{32})(?:['|\"|\n|\r|\s|\x60|;]|$)/,
         /(?:adobe)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:{1,3}=|\|\|:|<=|=>|:|\?=)(?:'|\"|\s|=|\x60){0,5}([a-f0-9]{32})(?:['|\"|\n|\r|\s|\x60|;]|$)/,
         /\b((p8e-)[a-z0-9]{32})(?:['|\"|\n|\r|\s|\x60|;]|$)/,
@@ -233,15 +233,19 @@
     ];
     var found = [];
 	
-	var secrets_el = document.getElementById('secrets-list');
-	secrets_el.value = secret_list.join("\n");
-	console.log(browser.browserAction.getBadgeText);
+	var secrets_el = document.getElementById('seecrets-list');
+    var regex_el   = document.getElementById('regex-list');
 	
+    console.log(browser.browserAction.getBadgeText);
 	
-
+    let lst_count = 0;
     secret_list.forEach(function(secret) {
         var selector = '[id*="' + secret + '"]';
-
+        let list_option = document.createElement('option');
+        list_option.id = "lst_sec_" + lst_count++;
+        list_option.name = "lst_sec_" + lst_count;
+        list_option.innerText = secret;
+        secrets_el.appendChild(list_option);
         document.querySelectorAll(selector).forEach(function(hit) {
             found.push(hit);
             console.log('id_match: ' + secret);
@@ -252,8 +256,14 @@
 
     var matched_regs = 0;
 
-    regexes.forEach(function(r) {
+    regex_list.forEach(function(r) {
 		var cur_regex = r;
+        console.log(r);
+        let list_option = document.createElement('option');
+        list_option.id = "lst_rgx_" + lst_count++;
+        list_option.name = "lst_rgx_" + lst_count;
+        list_option.innerText = cur_regex.toString();
+        regex_el.appendChild(list_option);
 
         jQuery("input").each(function(i) {
 			var input_val = $(this).val();
@@ -270,7 +280,7 @@
         });
     });
 
-    console.log(`Matched ${matched_regs} / ${regexes.length}`);
+    console.log(`Matched ${matched_regs} / ${regex_list.length}`);
 
     found.forEach(function(f) {
         if (f.type != 'password' && f.type != 'hidden') {
