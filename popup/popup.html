@@ -9,8 +9,8 @@
 		<link rel="stylesheet" href="css/bootstrap-icons.min.css">
 	</head>
 
-	<body class="border border-black rounded" style="width: 700px; overflow: hidden;">
-		<div class="bg-primary bg-gradient text-white">
+	<body class="rounded" style="width: 700px; overflow: hidden;">
+		<div class="bg-dark bg-gradient text-primary">
 			<div class="d-flex align-items-center">
 				<div class="flex-grow-1">
 					<h3><img class="rounded mx-auto" src="../../icons/icons8-mask-48.png" />Masked</h3>
@@ -36,7 +36,8 @@
 			<div class="col-6">
 				<div class="tab-content" id="nav-tabContent">
 					<div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-						A simple plugin to make sensitive information on the screen <span class="text-primary">Masked</span>
+						A simple plugin to convert sensitive information on the screen to an easily copied, <span class="text-primary">Masked</span> format.
+						Customize your mask, add your own regular expressions and keywords and no longer worry about shoulder-surfers.
 					</div>
 
 					<div class="tab-pane fade" id="list-seecrets" role="tabpanel" aria-labelledby="list-seecrets-list">
@@ -45,12 +46,12 @@
 						<div class="row mb-3" style="width: 135%;">
 							<div class="col">
 								<div class="input-group">
-									<span class="input-group-text text-bg-primary">Secrets</span>
-									<select id="seecrets-list" name="seecrets-list" class="form-select" size="10" aria-label="Secrets" style="overflow-x: scroll;"  multiple></select>
+									<span class="input-group-text shadow">Secrets</span>
+									<select id="seecrets-list" name="seecrets-list" class="form-select" size="10" aria-label="Secrets" style="overflow-x: scroll;" multiple></select>
 								</div>
 								<div class="input-group">
-									<span class="input-group-text">Add</span>
-									<input type="text" class="form-control" />
+									<span class="input-group-text shadow">Add</span>
+									<input type="text" class="form-control shadow" />
 								</div>
 							</div>
 						</div>
@@ -59,10 +60,10 @@
 						
 						<div class="row">
 							<div class="col text-center">
-								<div class="btn-group btn-group-sm" role="group" aria-label="Secrets Group">
+								<div class="btn-group btn-group" role="group" aria-label="Secrets Group">
 									<button class="btn btn-success" type="button">Append</button>
 									<button class="btn btn-warning" type="button">Clear</button>
-									<button class="btn btn-danger"  type="button">Discard</button>
+									<button class="btn btn-danger"  type="button" onclick="remove_selected_items('secret')">Remove</button>
 								</div>
 							</div>
 						</div>
@@ -77,6 +78,13 @@
 									<span class="input-group-text">Regex</span>
 									<select id="regex-list" name="regex-list" class="form-select" size="10" aria-label="Regex" multiple></select>
 								</div>
+								<div class="input-group">
+									<span class="input-group-text text-bg-success">Add</span>
+									<span class="input-group-text text-bg-secondary">/</span>
+									<input type="text" class="form-control" />
+									<span class="input-group-text text-bg-secondary">/g</span>
+
+								</div>
 							</div>
 						</div>
 						
@@ -87,7 +95,7 @@
 								<div class="btn-group btn-group-sm" role="group" aria-label="Secrets Group">
 									<button class="btn btn-success" type="button">Append</button>
 									<button class="btn btn-warning" type="button">Clear</button>
-									<button class="btn btn-danger"  type="button">Discard</button>
+									<button class="btn btn-danger"  type="button" onclick="remove_selected_items('secret')">Remove</button>
 								</div>
 							</div>
 						</div>
@@ -103,13 +111,25 @@
 								<small><font size="1">Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry</font></small>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col">
+								<div class="btn-group" role="group"	aria-label="Mask styles">
+									<input type="radio" class="btn-check-sm" name="btnradio" id="btncheck1" autocomplete="off"	/>
+									<label class="btn btn-outline-primary" for="btncheck1">First One</label>
+									<input type="radio" class="btn-check" name="btnradio" id="btncheck2" autocomplete="off"	/>
+									<label class="btn btn-outline-primary" for="btncheck2">Second One</label>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</body>
 		
 		<script src="js/bootstrap.bundle.min.js"></script>
+		<script src="js/functions.js"></script>
 		<script src="js/masked.js"></script>
+		
 		
 		
 	</body>
