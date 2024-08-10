@@ -37,5 +37,5 @@ function load_lists(which) {
                 selected_list.appendChild(list_option);
             }
         })
-        .catch((error) => console.error(e));
+        .catch((error) => console.error(error));
 }

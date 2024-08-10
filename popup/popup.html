@@ -6,12 +6,11 @@
 		<meta http-equiv="Content-Security-Policy" content="default-src 'self' gap:; script-src 'self' 'unsafe-eval'; object-src *; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:; media-src 'self' data:; font-src 'self' data:; connect-src *;">
 
 		<script src="js/jquery-3.7.1.min.js"></script>
-		<script src="js/functions.js"></script>
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="css/bootstrap-icons.min.css">
 	</head>
 
-	<body style="width: 750px; overflow: hidden;">
+	<body style="width: 750px; height: 420px; overflow: hidden;">
 		<div class="bg-primary bg-gradient text-white">
 			<div class="d-flex justify-content-center align-content-center">
 				<div>
@@ -19,7 +18,7 @@
 				</div>
 				
 				<div class="ms-2">
-					<h4>Masked</h4>
+					<h4 class="pt-1">Masked</h4>
 				</div>
 			</div>
 		</div>
@@ -55,8 +54,8 @@
 								</div>
 
 								<div class="input-group">
-									<span class="input-group-text shadow">Add</span>
-									<input id="add-secret" name="add-secret" type="text" class="form-control shadow" />
+									<span class="input-group-text">Add</span>
+									<input id="add-secret" name="add-secret" type="text" class="form-control" />
 								</div>
 							</div>
 						</div>
@@ -106,12 +105,14 @@
 			
 					<div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
 						<div class="row">
-							<div class="col">
+							<div class="col mt-3">
 								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-									<label class="form-check-label" for="flexSwitchCheckChecked">Include Secrets in Regex Search</label>
+									<input class="form-check-input" type="checkbox" role="switch" id="option-rgx-in-sec" name="option-rgx-in-sec">
+									<label class="form-check-label" for="option-rgx-in-sec">Include Secrets in Regex Search</label>
 								</div>
-								<small style="font-size: 1px;">Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry.</small>
+
+								<small style="font-size: 10px;">
+									Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry.</small>
 							</div>
 						</div>
 						<div class="row">
@@ -129,9 +130,9 @@
 		<div id="status">
 
 		</div>
-
+		
 		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/masked.js"></script>
+		<script src="js/functions.js"></script>
 		<script src="js/handlers.js"></script>
 	</body>
 </html>

@@ -2,7 +2,6 @@
     "manifest_version": 2,
     "name": "Masked",
     "version": "1.0",
-    "default_locale": "en",
     "description": "Hides sensitive information on the screen such as API keys, OAuth2 cids/secrets, passwords, etc.",
     "homepage_url": "https://masked.memelife.ca/",
 
@@ -16,7 +15,8 @@
 	    "activeTab",
 	    "storage",
         "scripting",
-        "clipboardWrite"
+        "clipboardWrite",
+        "contextMenus"
     ],
 
     "browser_action": {
@@ -26,17 +26,17 @@
     },
 
     "content_scripts": [{
-        "exclude_matches": ["https://*/*"],
         "matches" : ["<all_urls>"],
         "js": [
-            "popup/js/functions.js",
             "popup/js/masked.js"
-            
         ]
     }],
   
     "background": {
         "scripts": [
+            "popup/js/handlers.js",
+            "popup/js/functions.js",
+            "popup/js/background.js"            
         ]
     }  
 }
