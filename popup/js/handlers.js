@@ -1,3 +1,6 @@
+console.log("loaded handlers.js");
+
+// content script
 document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
     function(e) {
         e.addEventListener("click",
@@ -40,8 +43,3 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
         );
     }
 );
-
-document.addEventListener("DOMContentLoaded", function(event) {
-
-    
-});
