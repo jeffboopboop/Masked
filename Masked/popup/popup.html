@@ -14,7 +14,7 @@
 		<div class="bg-primary bg-gradient text-white">
 			<div class="d-flex justify-content-center align-content-center">
 				<div>
-					<img src="../../icons/icons8-mask-32.png" />
+					<img src="../icons/icons8-mask2-32.png" />
 				</div>
 				
 				<div class="ms-2">
@@ -26,10 +26,18 @@
 		<div class="row mb-3">
 			<div class="col-4">
 				<div class="list-group border" id="list-tab" role="tablist">
-					<a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">Home</a>
-					<a class="list-group-item list-group-item-action" id="list-seecrets-list" data-bs-toggle="list" href="#list-seecrets" role="tab" aria-controls="list-seecrets">Secrets</a>
-					<a class="list-group-item list-group-item-action" id="list-regex-list" data-bs-toggle="list" href="#list-regex" role="tab" aria-controls="list-regex">Regex</a>
-					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Settings</a>
+					<a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
+						Home
+					</a>
+					<a class="list-group-item list-group-item-action" id="list-secrets-list" data-bs-toggle="list" href="#list-secrets" role="tab" aria-controls="list-secrets">
+						Secrets
+					</a>
+					<a class="list-group-item list-group-item-action" id="list-regex-list" data-bs-toggle="list" href="#list-regex" role="tab" aria-controls="list-regex">
+						Regex
+					</a>
+					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">
+						Settings
+					</a>
 				</div>
 			</div>
 			<div class="col-6 border" style="width: 65%">
@@ -41,7 +49,7 @@
 						no longer worry about shoulder-surfers, or people watching your streams.
 					</div>
 
-					<div class="tab-pane fade" id="list-seecrets" role="tabpanel" aria-labelledby="list-seecrets-list">
+					<div class="tab-pane fade" id="list-secrets" role="tabpanel" aria-labelledby="list-secrets-list">
 						<div class="mb-3">
 							Masked looks for elements on the page whose ID contain any secrets listed here.
 						</div>
@@ -50,7 +58,7 @@
 							<div class="col">
 								<div class="input-group">
 									<span class="input-group-text shadow">Secrets</span>
-									<select id="seecrets-list" name="seecrets-list" class="form-select" size="10" aria-label="Secrets" style="overflow-x: scroll;" multiple></select>
+									<select id="secrets-list" name="secrets-list" class="form-select" size="10" aria-label="Secrets" style="overflow-x: scroll;" multiple></select>
 								</div>
 
 								<div class="input-group">
@@ -87,7 +95,6 @@
 									<span class="input-group-text text-bg-secondary">/</span>
 									<input id="add-regex" name="add-regex" type="text" class="form-control" />
 									<span class="input-group-text text-bg-secondary">/g</span>
-
 								</div>
 							</div>
 						</div>
@@ -112,7 +119,8 @@
 								</div>
 
 								<small style="font-size: 10px;">
-									Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry.</small>
+									Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry.
+								</small>
 							</div>
 						</div>
 						<div class="row">
@@ -132,7 +140,8 @@
 		</div>
 		
 		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/functions.js"></script>
-		<script src="js/handlers.js"></script>
+		<script src="../functions.js"></script>
+		<script src="../handlers.js"></script>
+		<script src="js/popup.js"></script>
 	</body>
 </html>
