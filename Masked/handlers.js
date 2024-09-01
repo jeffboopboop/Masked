@@ -49,7 +49,7 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
                     
                     target_list.appendChild(list_option);
                     
-                    browser.storage.local.get("storage_data")
+                    browser.storage.local.get()
                         .then((response) => {
                             storage_data.regexes = response.regexes;
                             storage_data.secrets = response.secrets;
@@ -58,12 +58,6 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
                         }
                     );
                     
-                    if (list_sel === 'add-regex') {
-                        storage_data.regexes.push(list_option.text);
-                    } else {
-                        storage_data.secrets.push(list_option.text);
-                    }
-
                     browser.storage.local.set("storage_data",  storage_data);
                 }
             }

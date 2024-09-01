@@ -1,8 +1,5 @@
 console.log("loaded functions.js");
 function add_menu_badges() {
-    ts(secrets_resource);
-
-
         let secrets_list = document.getElementById("seecrets-list");
         let regexes_list = document.getElementById("regex-list");
 
@@ -23,7 +20,7 @@ function add_menu_badges() {
 
 function status_message(message) {
     $("#status")[0].innerText = message;
-    $("#status").fadeIn(3000);
-    $("#status").fadeOut(3000);
+    $("#status").fadeIn(1000);
+    $("#status").fadeOut(1000);
 }
 

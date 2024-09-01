@@ -1,93 +1,90 @@
     'use strict';
-    console.log("masked.js injected");
+        console.log("loaded masked.js");
+        let found = [];
+        var storage_data = {
+            "regexes": [],
+            "secrets": []
+        };
 
-    let local_storage_data = {
-        "regexes": [],
-        "secrets": [],
-    };
-
-    (() => {
-        if (window.hasRun) {
-            console.log("masked.js already ran, bailing");
-            return;
-        }
-        window.hasRun = true;
-
-        console.log("masked.js: checking storage");
-        let storage_data = null;
-        
-        console.log(storage_data);
-        console.log("masked.js: no data in storage");
-        
-        let message_bg = browser.runtime.sendMessage({'masked_cmd': 'get_lists'});
-        message_bg.then(populate_local_obj, notify_error).catch((error) => console.log(error));
-
-        function notify_error(e) {
-            console.log(`olord: ${e}`);
-        }
-
-        function populate_local_obj(storage_data) {
-            local_storage_data = storage_data;
-        }
-    })();
-
-    let found = [];
-
-    let secrets_list = local_storage_data.secrets;
-    let regexes_list = local_storage_data.regexes;
-
-    document.querySelectorAll('option[id^="lst_sec"]').forEach(
-        function(secret) {
-            let selector = '[id*="' + secret + '"]';
-            document.querySelectorAll(selector).forEach(
-                function(hit) {
-                    found.push(hit);
-                    console.log('id_match: ' + secret);
-                }
-            );
-        }
-    );
-
-    document.querySelectorAll('option[id^="lst_rgx"]').forEach(
-        function(r) {
-            document.querySelectorAll("input span div").forEach(function(i) {
-                var input_val = $(this).val();
-                var input_len = input_val.length;
-                var input_type = $(this).type;
-
-                if (input_len > 3 && input_type != "password" && input_type != "hidden") {
-                    if (input_val.match(cur_regex)) {
-                        matched_regs++;
-                        found.push(i);
-                        console.log('regex_match ' + input_val);
-                    }
-                }
-            });
-        }
-    );
-
-
-    found.forEach(function(f) {
-        if (f.type != 'password' && f.type != 'hidden') {
-            if (f.value && f.value.length) {
-                var holder = document.createElement('a');
-                holder.id = f.id + '-masked';
-                holder.setAttribute('value', f.value);
-                holder.innerHTML = '✂️';
-
-                f.before(holder);
-                f.type = 'password';
+        async function init() {
+            try {
+                let data = await browser.storage.local.get();
+                storage_data.regexes = data.regexes;
+                storage_data.secrets = data.secrets;
+                console.log(`masked.js: got some stuff from storage: ${data}`);
+            } catch (error) {
+                console.error(error);
             }
-
-            jQuery("a[id$=-masked").on("click", function (id) {
-                navigator.clipboard.writeText(document.getElementById(id.target.id).attributes.value.value);
-            });
-            
-            let message = {
-                "masked_cmd": "update_badge",
-                "count": found.length
-            };
-
-            browser.runtime.sendMessage(message);
+        
+            if (!storage_data.regexes) {
+                console.log("masked.js: Found nothing in storage, msg -> bg script");
+                try {
+                    let response = await browser.runtime.sendMessage({
+                        "masked_cmd": "get_lists",
+                        "sender": "masked.js"
+                    });
+                    storage_data.regexes = response.regexes;
+                    storage_data.secrets = response.secrets;
+                    console.log(`Got: ${response}`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        
+            console.log(storage_data.secrets);
+            do_masks(storage_data);
         }
-    });
+
+        init();
+    
+        function do_masks(sturrige) {
+            console.log(`doin' masks`);
+            sturrige.secrets.forEach(function(secret) {
+                console.log(secret);
+                let selector = '[id*="' + secret + '"]';
+                document.querySelectorAll(selector).forEach(
+                function(hit) {
+                        found.push(hit);
+                        console.log('id_match: ' + secret);
+                    }
+                );
+            });
+
+            sturrige.regexes.forEach((regex) => {
+                console.log(regex);
+                document.querySelectorAll("input,div").forEach(function(i) {
+                    console.log(regex);
+                    var input_val = i.value;
+                    var input_len = i.length;
+                    var input_type = i.type;
+
+                    if (input_len > 3 && input_type != "password" && input_type != "hidden") {
+                        if (input_val.match(regex)) {
+                            matched_regs++;
+                            found.push(i);
+                            console.log('regex_match ' + input_val);
+                        }
+                    }
+                });
+            });
+
+            console.log(`count found: ${found.length}`);
+
+            found.forEach((f) => {
+                if (f.type != 'password' && f.type != 'hidden') {
+                    
+                        var holder = document.createElement('a');
+                        holder.id = f.id + '-masked';
+                        holder.setAttribute('value', f.value);
+                        holder.innerHTML = '✂️';
+
+                        f.before(holder);
+                        f.type = 'password';
+                    
+
+                    jQuery("a[id$=-masked").on("click", function (id) {
+                        navigator.clipboard.writeText(document.getElementById(id.target.id).attributes.value.value);
+                    });
+                }
+            });
+    }

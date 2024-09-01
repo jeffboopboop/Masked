@@ -50,15 +50,13 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": [
-                "Masked/masked.js",
-                "Masked/popup/popup.js"
-            ],
+            "js": ["Masked/masked.js"],
             "run_at": "document_end"
         },
         {
             "matches": ["<all_urls>"],
-            "js": ["Masked/popup/js/jquery-3.7.1.min.js"]
+            "js": ["Masked/popup/js/jquery-3.7.1.min.js"],
+            "run_at": "document_start"
         }
     ],
     

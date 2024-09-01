@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="css/bootstrap-icons.min.css">
 	</head>
 
-	<body style="width: 750px; height: 420px; overflow: hidden;">
+	<body style="width: 750px; height: 445px; overflow: hidden;">
 		<div class="bg-primary bg-gradient text-white">
 			<div class="d-flex justify-content-center align-content-center">
 				<div>
@@ -37,6 +37,9 @@
 					</a>
 					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">
 						Settings
+					</a>
+					<a class="list-group-item list-group-item-action" id="list-credits-list" data-bs-toggle="list" href="#list-credits" role="tab" aria-controls="list-credits">
+						Credits
 					</a>
 				</div>
 			</div>
@@ -131,17 +134,31 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="tab-pane fade" id="list-credits" role="tabpanel" aria-labelledby="list-credits-list">
+						<div class="row">
+							<div class="col mt-3">
+								<div class="text-center">
+									Most of the regular expressions and ID compositions have been collected compiled from SecLists & gitleaks<br>
+									Some of the ID's are collected from websites I use<br>
+									<small><a href="https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml">GitLeaks .toml (Regex)</a></small><br>
+									<small><a href="https://github.com/SecLists">SecLists (ID's)</a></small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="status" class="text-center">
+
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div id="status">
-
-		</div>
-		
 		<script src="js/bootstrap.bundle.min.js"></script>
 		<script src="../functions.js"></script>
 		<script src="../handlers.js"></script>
 		<script src="js/popup.js"></script>
+		
 	</body>
 </html>

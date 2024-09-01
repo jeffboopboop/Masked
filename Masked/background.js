@@ -26,8 +26,8 @@ function handle_install() {
     console.log("Extension installed");
     
     let storage_data = {
-        regexes: [],
-        secrets: []
+        "regexes": [],
+        "secrets": []
     };
 
     const all_promises = [
@@ -66,25 +66,38 @@ function handle_install() {
 browser.runtime.onInstalled.addListener(handle_install);
 
 browser.runtime.onMessage.addListener(function(message, sender, senderResponse) {
+    browser.storage.local.get()
+        .then((response) => {
+            storage_data.regexes = response.regexes;
+            storage_data.secrets = response.secrets;
+            console.log(`background.js: in regexes, got back data: ${response}`);
+        }).catch((error) => {
+            console.error(`background.js: ${error}`);
+        }
+    );
+
     if (message.masked_cmd == "get_lists") {
         let storage_data = {
             regexes: [],
             secrets: []
         };
-        
-        console.log('background.js: message in onMessage handler');
+
         console.log(message);
-        console.log('background.js: sender in onMessage handler');
         console.log(sender);
 
-        browser.storage.local.get()
-            .then((response) => {
-                storage_data.regexes = response.regexes;
-                storage_data.secrets = response.secrets;
-                console.log(`background.js: in regexes, got back data: ${response}`);
+        if (message.sender == "masked.js" && sender.tab.active == true) {
+            let tab_id = sender.tab.id;
+            console.log(`background.js: ${message.sender} wants lists, sending 'em back to tab ID ${tab_id}`);
+            const reply_msg = browser.tabs.sendMessage(tab_id, storage_data);
+
+            reply_msg.then((response) => {
+                console.log(`background.js: got response from tab ${tab_id}: ${response}`);
             }).catch((error) => {
                 console.error(`background.js: ${error}`);
             });
+            return true;
+        }
+    
         senderResponse(storage_data);
         return true;
     }
