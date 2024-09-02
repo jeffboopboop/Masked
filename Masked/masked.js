@@ -32,6 +32,7 @@
             }
         
             console.log(storage_data.secrets);
+            document.head.append('a.masked { position: relative; top: 50%; z-index: 2; div,input.maskedparent { position: relative;  z-index: 1; }');
             do_masks(storage_data);
         }
 
@@ -72,19 +73,29 @@
 
             found.forEach((f) => {
                 if (f.type != 'password' && f.type != 'hidden') {
-                    
-                        var holder = document.createElement('a');
-                        holder.id = f.id + '-masked';
-                        holder.setAttribute('value', f.value);
-                        holder.innerHTML = '✂️';
+                    var holder = document.createElement('a');
+                    holder.id = f.id + '-masked';
+                    holder.innerHTML = '✂️';
+                    holder.style.position = 'relative';
+                    holder.style.zIndex = '99';
+                    holder.style.left = "90%";
+                    holder.style.top = '51%';
 
-                        f.before(holder);
-                        f.type = 'password';
-                    
+                    if (typeof(f) == 'input') {
+                        if (f.length) {
+                            holder.setAttribute('value', f.value);
+                        }
+                    } else {
+                        holder.setAttribute('textContent', f.value);
+                    }
+                        
+
+                    f.before(holder);
+                    f.type = 'password';
 
                     jQuery("a[id$=-masked").on("click", function (id) {
                         navigator.clipboard.writeText(document.getElementById(id.target.id).attributes.value.value);
                     });
                 }
             });
-    }
+        }
