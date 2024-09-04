@@ -73,13 +73,19 @@
 
             found.forEach((f) => {
                 if (f.type != 'password' && f.type != 'hidden') {
-                    var holder = document.createElement('a');
+                    let holder = document.createElement('a');
+                    
+                    
+                    new ResizeObserver(() => {
+                        holder.style.top = '50%';    
+                    }).observe(document.body);
+
                     holder.id = f.id + '-masked';
                     holder.innerHTML = '✂️';
+                    holder.style.top = '51%';
                     holder.style.position = 'relative';
                     holder.style.zIndex = '99';
                     holder.style.left = "90%";
-                    holder.style.top = '51%';
 
                     if (typeof(f) == 'input') {
                         if (f.length) {
@@ -93,8 +99,8 @@
                     f.before(holder);
                     f.type = 'password';
 
-                    jQuery("a[id$=-masked").on("click", function (id) {
-                        navigator.clipboard.writeText(document.getElementById(id.target.id).attributes.value.value);
+                    $("a[id$=-masked").on("click", () => {
+                        navigator.clipboard.writeText($("#email-masked").next().val());
                     });
                 }
             });

@@ -12,7 +12,7 @@
 
 	<body style="width: 750px; height: 445px; overflow: hidden;">
 		<div class="bg-primary bg-gradient text-white">
-			<div class="d-flex justify-content-center align-content-center">
+			<div class="d-flex justify-content-center align-content-center p-1">
 				<div>
 					<img src="../icons/icons8-mask2-32.png" />
 				</div>
@@ -117,19 +117,26 @@
 						<div class="row">
 							<div class="col mt-3">
 								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" role="switch" id="option-rgx-in-sec" name="option-rgx-in-sec">
+									<input class="form-check-input" type="checkbox" role="switch" id="option-rgx-in-sec" name="option-rgx-in-sec" onclick="setOption('incsec',)">
 									<label class="form-check-label" for="option-rgx-in-sec">Include Secrets in Regex Search</label>
 								</div>
 
 								<small style="font-size: 10px;">
-									Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry.
+									Any secrets which are to be searched for in ID's, will also be added to the regex list, in a pipe-separated entry
 								</small>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col">
-								<div class="mask-style-list" role="group" aria-label="Mask styles">
-									
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch" id="option-mask-emails" name="option-mask-emails">
+										<label class="form-check-label" for="option-mask-emails">Mask emails</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Fields which are detected as email fields will be masked as well
+									</small>
 								</div>
 							</div>
 						</div>

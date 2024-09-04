@@ -87,7 +87,6 @@ browser.runtime.onMessage.addListener(function(message, sender, senderResponse) 
 
         if (message.sender == "masked.js" && sender.tab.active == true) {
             let tab_id = sender.tab.id;
-            console.log(`background.js: ${message.sender} wants lists, sending 'em back to tab ID ${tab_id}`);
             const reply_msg = browser.tabs.sendMessage(tab_id, storage_data);
 
             reply_msg.then((response) => {
