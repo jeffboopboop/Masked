@@ -6,8 +6,10 @@
 		<meta http-equiv="Content-Security-Policy" content="default-src 'self' gap:; script-src 'self' 'unsafe-eval'; object-src *; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:; media-src 'self' data:; font-src 'self' data:; connect-src *;">
 
 		<script src="js/jquery-3.7.1.min.js"></script>
-		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
+		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-icons.min.css">
+		<link rel="stylesheet" href="css/overlayscrollbars.min.css">
 	</head>
 
 	<body style="width: 750px; height: 445px; overflow: hidden;">
@@ -43,7 +45,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="col-6 border" style="width: 65%">
+			<div id="plugin-container" class="col-6 border masked-container">
 				<div class="tab-content" id="nav-tabContent">
 					<div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
 						A simple plugin to convert sensitive information on the screen to a <span class="text-primary">Masked</span> format.
@@ -53,13 +55,9 @@
 					</div>
 
 					<div class="tab-pane fade" id="list-secrets" role="tabpanel" aria-labelledby="list-secrets-list">
-						<div class="mb-3">
-							Masked looks for elements on the page whose ID contain any secrets listed here.
-						</div>
-
 						<div class="row mb-3" style="width: 100%;">
 							<div class="col">
-								<div class="input-group">
+								<div class="input-group-sm">
 									<span class="input-group-text shadow">Secrets</span>
 									<select id="secrets-list" name="secrets-list" class="form-select" size="10" aria-label="Secrets" style="overflow-x: scroll;" multiple></select>
 								</div>
@@ -82,11 +80,7 @@
 						</div>
 					</div>
 			  
-					<div class="tab-pane fade" id="list-regex" role="tabpanel" aria-labelledby="list-regex-list">
-						<div class="mb-3">
-							Regex matching will search every HTML element that is an input, except for 'password' or 'hidden'
-						</div>
-
+					<div id="list-regex" class="tab-pane fade" role="tabpanel" aria-labelledby="list-regex-list">
 						<div class="row mb-3" style="width: 100%;">
 							<div class="col">
 								<div class="input-group">
@@ -113,12 +107,12 @@
 						</div>
 					</div>
 			
-					<div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
+					<div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list" style="max-height: 300px; overflow: visible;">
 						<div class="row">
 							<div class="col mt-3">
 								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" role="switch" id="option-rgx-in-sec" name="option-rgx-in-sec" onclick="setOption('incsec',)">
-									<label class="form-check-label" for="option-rgx-in-sec">Include Secrets in Regex Search</label>
+									<input id="option-id-in-regex" name="option-id-in-regex" class="form-check-input" type="checkbox" role="switch">
+									<label class="form-check-label" for="option-id-in-regex">Include Secrets in Regex Search</label>
 								</div>
 
 								<small style="font-size: 10px;">
@@ -126,16 +120,107 @@
 								</small>
 							</div>
 						</div>
+
 						<div class="row">
 							<div class="col">
 								<div class="col mt-3">
 									<div class="form-check form-switch">
-										<input class="form-check-input" type="checkbox" role="switch" id="option-mask-emails" name="option-mask-emails">
+										<input id="option-mask-emails" name="option-mask-emails" class="form-check-input" type="checkbox" role="switch">
 										<label class="form-check-label" for="option-mask-emails">Mask emails</label>
 									</div>
 	
 									<small style="font-size: 10px;">
 										Fields which are detected as email fields will be masked as well
+									</small>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input id="option-enable-regex" name="option-enable-regex" class="form-check-input" type="checkbox" role="switch">
+										<label class="form-check-label" for="option-enable-regex">Enable Regex Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the regex functionality which allows you to search more fields, with more matching capabilities
+									</small>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input id="option-enable-id" name="option-enable-id" class="form-check-input" type="checkbox" role="switch">
+										<label class="form-check-label" for="option-mask-emails">Enable ID Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the ID searching functionality which searches HTML elements matching input fields
+									</small>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch" id="option-enable-id" name="option-enable-id">
+										<label class="form-check-label" for="option-mask-emails">Enable ID Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the ID searching functionality which searches HTML elements matching input fields
+									</small>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch" id="option-enable-id" name="option-enable-id">
+										<label class="form-check-label" for="option-mask-emails">Enable ID Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the ID searching functionality which searches HTML elements matching input fields
+									</small>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3" style="max-height: 420px;">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch" id="option-enable-id" name="option-enable-id">
+										<label class="form-check-label" for="option-mask-emails">Enable ID Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the ID searching functionality which searches HTML elements matching input fields
+									</small>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col">
+								<div class="col mt-3">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" role="switch" id="option-enable-id" name="option-enable-id">
+										<label class="form-check-label" for="option-mask-emails">Enable ID Searching</label>
+									</div>
+	
+									<small style="font-size: 10px;">
+										Enables the ID searching functionality which searches HTML elements matching input fields
 									</small>
 								</div>
 							</div>
@@ -165,6 +250,7 @@
 		<script src="js/bootstrap.bundle.min.js"></script>
 		<script src="../functions.js"></script>
 		<script src="../handlers.js"></script>
+		<script src="js/overlayscrollbars.browser.es6.min.js"></script>
 		<script src="js/popup.js"></script>
 		
 	</body>

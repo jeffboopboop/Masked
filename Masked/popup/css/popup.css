@@ -1,0 +1,5 @@
+.masked-container {
+    max-height: 300px;
+    overflow: hidden;
+    width: 65%;
+}

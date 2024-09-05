@@ -1,5 +1,19 @@
 console.log("loaded background.js");
 
+let storage_data = {
+    lists: {
+        regexes: [],
+        secrets: [],
+    },
+    options: {
+        enable_regexes: true,
+        enable_secrets: true,
+        id_in_regex: false,
+        mask_emails: false,
+        mask_style: 0
+    }
+};
+
 function handle_ctx_menus() {
     browser.contextMenus.create({
         id: "ctx_masked",
@@ -24,17 +38,12 @@ function handle_ctx_menus() {
 
 function handle_install() {
     console.log("Extension installed");
-    
-    let storage_data = {
-        "regexes": [],
-        "secrets": []
-    };
 
     const all_promises = [
         fetch(browser.runtime.getURL('Masked/resources/regexes.txt'))
             .then(response => response.text())
             .then(data => {
-                storage_data.regexes = data.split('\n');
+                storage_data.lists.regexes = data.split('\n');
             }
         ).catch((error) =>
             console.error(error)
@@ -43,7 +52,7 @@ function handle_install() {
         fetch(browser.runtime.getURL('Masked/resources/secrets.txt'))
             .then(response => response.text())
             .then(data => {
-                storage_data.secrets = data.split('\n');
+                storage_data.lists.secrets = data.split('\n');
                 console.log("background.js: loaded secrets");
             }
         ).catch((error) => {
@@ -53,9 +62,7 @@ function handle_install() {
 
     Promise.all(all_promises).then(() => {
         console.log("background.js: all fetches complete, adding initial storage data");
-        browser.storage.local.set({
-             regexes: storage_data.regexes, secrets: storage_data.secrets
-        });
+        browser.storage.local.set({masked_data: storage_data});
     }).catch((error) => {
         console.error(error);
     });
@@ -68,8 +75,7 @@ browser.runtime.onInstalled.addListener(handle_install);
 browser.runtime.onMessage.addListener(function(message, sender, senderResponse) {
     browser.storage.local.get()
         .then((response) => {
-            storage_data.regexes = response.regexes;
-            storage_data.secrets = response.secrets;
+            storage_data = response.storage_data;
             console.log(`background.js: in regexes, got back data: ${response}`);
         }).catch((error) => {
             console.error(`background.js: ${error}`);
@@ -77,11 +83,6 @@ browser.runtime.onMessage.addListener(function(message, sender, senderResponse) 
     );
 
     if (message.masked_cmd == "get_lists") {
-        let storage_data = {
-            regexes: [],
-            secrets: []
-        };
-
         console.log(message);
         console.log(sender);
 

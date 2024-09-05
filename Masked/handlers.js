@@ -65,6 +65,10 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
     }
 );
 
-/*browser.runtime.onMessage.addListener((message) => {
-    console.log(message);
-});*/
+$("option-id-in-regex").on("click", (e) => {
+    let cur_val = this.clicked;
+});
+
+$("option-mask-emails").on("click", (e) => {
+});
+
