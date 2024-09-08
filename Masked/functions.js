@@ -20,7 +20,32 @@ function add_menu_badges() {
 
 function status_message(message) {
     $("#status")[0].innerText = message;
-    $("#status").fadeIn(1000);
-    $("#status").fadeOut(1000);
+    $("#status").fadeIn(2000);
+    $("#status").fadeOut(2000);
 }
 
+async function set_masked_obj(data) {
+    let storage_data = JSON.parse(data);
+    console.log(`storage data: ${storage_data}`);
+    console.log(`Saving masked_data to local storage: ${data}`);
+
+    document.querySelectorAll('option[id^="lst_sec"]').forEach((opt) => {
+        storage_data.lists.secrets.push(opt.value);
+    });
+
+    document.querySelectorAll('option[id^="lst_rgx"]').forEach((opt) => {
+        storage_data.lists.regexes.push(opt.value);
+    });
+    
+    storage_data.options.mask_emails      = document.getElementById('option-mask-emails');
+    storage_data.options.secrets_in_regex = document.getElementById('option-id-in-regex');
+    storage_data.options.enable_regexes   = document.getElementById('option-enable-regex');
+    storage_data.options.enable_secrets   = document.getElementById('option-enable-secret');
+
+    browser.storage.local.set({masked_data: storage_data})
+        .then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error(error);
+        });
+}

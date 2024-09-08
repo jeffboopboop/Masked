@@ -1,38 +1,34 @@
     'use strict';
         console.log("loaded masked.js");
-        let found = [];
-        let storage_data = {
-            "regexes": [],
-            "secrets": [],
-            "options": {
-                "enable_regexes": true,
-                "enable_secrets": true,
-                "id_in_regex": false,
-                "mask_emails": false,
-                "mask_style": 0
-            }
-        };
 
         async function init() {
+            let storage_data = {
+                regexes: [],
+                secrets: [],
+                options: {
+                    enable_regexes: true,
+                    enable_secrets: true,
+                    secrets_in_regex: false,
+                    mask_emails: false,
+                    mask_style: 0
+                }
+            };
+
             try {
                 let data = await browser.storage.local.get();
-                storage_data.regexes = data.regexes;
-                storage_data.secrets = data.secrets;
-                storage_data.options = data.options;
+                storage_data = data.masked_data;
             } catch (error) {
                 console.error(error);
             }
         
-            if (!storage_data.regexes) {
+            if (!storage_data.lists.regexes.length) {
                 try {
                     let response = await browser.runtime.sendMessage({
                         "masked_cmd": "get_lists",
                         "sender": "masked.js"
                     });
 
-                    storage_data.regexes = response.regexes;
-                    storage_data.secrets = response.secrets;
-                    storage_data.options = response.options;
+                    storage_data = response.masked_data;
                 } catch (error) {
                     console.error(error);
                 }
@@ -44,9 +40,11 @@
 
         init();
     
-        function do_masks(sturrige) {
+        function do_masks(storage_data) {
+            let found = [];
+            
             if (storage_data.options.enable_secrets === true) {
-                sturrige.secrets.forEach(function(secret) {
+                storage_data.lists.secrets.forEach(function(secret) {
                     if (storage_data.options.mask_emails === false && secret.match(/email/)) {
                         return;
                     }
@@ -61,14 +59,14 @@
             }
 
             if (storage_data.options.enable_regexes === true) {
-                if (storage_data.options.id_in_regex === true) {
-                    storage_data.secrets.forEach((s) => {
+                if (storage_data.options.secrets_in_regex === true) {
+                    storage_data.lists.secrets.forEach((s) => {
                         let temp_sec = `/${s}/g`;
-                        storage_data.regexes.push(temp_sec);
+                        storage_data.lists.regexes.push(temp_sec);
                     });
                 }
 
-                sturrige.regexes.forEach((regex) => {
+                storage_data.lists.regexes.forEach((regex) => {
                     document.querySelectorAll("input,div").forEach(function(i) {
                         var input_val = i.value;
                         var input_len = i.length;
@@ -96,7 +94,7 @@
                     holder.innerHTML = '🧐';
                     holder.style.top = '51%';
                     holder.style.position = 'relative';
-                    holder.style.zIndex = '99';
+                    holder.style.zIndex = '300';
                     holder.style.left = "90%";
 
                     if (f.type == 'input') {

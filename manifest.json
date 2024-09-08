@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Masked",
-    "version": "1.3.0.48",
+    "version": "1.3.1.48",
     "author": "Ziddy",
     "description": "Hides sensitive information on the screen such as API keys, OAuth2 cids/secrets, passwords, etc.",
     "homepage_url": "https://masked.memelife.ca/",
@@ -9,7 +9,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "masked@memelife.ca",
-            "strict_min_version": "58.0"
+            "strict_min_version": "109.0"
         }
     },
 

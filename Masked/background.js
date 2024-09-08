@@ -8,7 +8,7 @@ let storage_data = {
     options: {
         enable_regexes: true,
         enable_secrets: true,
-        id_in_regex: false,
+        secrets_in_regex: false,
         mask_emails: false,
         mask_style: 0
     }
@@ -62,12 +62,25 @@ function handle_install() {
 
     Promise.all(all_promises).then(() => {
         console.log("background.js: all fetches complete, adding initial storage data");
-        browser.storage.local.set({masked_data: storage_data});
+        
+        browser.storage.local.set({masked_data: storage_data})
+            .then((response) => {
+                console.log(`background.js: storage data saved: ${response}`);
+                set_masked_obj(JSON.stringify(storage_data)).then((response) => {
+                    console.log(response);
+                }).catch((error) => {
+                    console.error(error);
+                });
+            }).catch((error) => {
+                console.error(error);
+            });
     }).catch((error) => {
         console.error(error);
     });
 
     handle_ctx_menus();
+
+
 }
 
 browser.runtime.onInstalled.addListener(handle_install);
@@ -75,7 +88,7 @@ browser.runtime.onInstalled.addListener(handle_install);
 browser.runtime.onMessage.addListener(function(message, sender, senderResponse) {
     browser.storage.local.get()
         .then((response) => {
-            storage_data = response.storage_data;
+            storage_data = response.masked_data;
             console.log(`background.js: in regexes, got back data: ${response}`);
         }).catch((error) => {
             console.error(`background.js: ${error}`);

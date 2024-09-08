@@ -1,16 +1,18 @@
 {
     "version": "0.2.0",
-    "configurations": [{
-        "name": "Launch WebExtension",
-        "type": "firefox",
-        "request": "launch",
-        "reAttach": true,
-        "addonPath": "${workspaceFolder}",
-        "log": {
-            "fileName": "${workspaceFolder}/log.txt",
-            "fileLevel": {
-                "default": "Debug"
-            }
+    "configurations": [
+        {
+            "name": "Launch WebExtension",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "addonPath": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "moz-extension://cc83fcf4-b015-404b-b636-f656fd73471e",
+                    "path": "${workspaceFolder}"
+                }
+            ]
         }
-    }]
+    ]
 }
