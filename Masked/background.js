@@ -1,19 +1,5 @@
 console.log("loaded background.js");
 
-let storage_data = {
-    lists: {
-        regexes: [],
-        secrets: [],
-    },
-    options: {
-        enable_regexes: true,
-        enable_secrets: true,
-        secrets_in_regex: false,
-        mask_emails: false,
-        mask_style: 0
-    }
-};
-
 function handle_ctx_menus() {
     browser.contextMenus.create({
         id: "ctx_masked",
@@ -38,6 +24,20 @@ function handle_ctx_menus() {
 
 function handle_install() {
     console.log("Extension installed");
+
+    var storage_data = {
+        lists: {
+            regexes: [],
+            secrets: [],
+        },
+        options: {
+            enable_regexes: true,
+            enable_secrets: true,
+            secrets_in_regex: false,
+            mask_emails: false,
+            mask_style: 0
+        }
+    };
 
     const all_promises = [
         fetch(browser.runtime.getURL('Masked/resources/regexes.txt'))
@@ -66,11 +66,6 @@ function handle_install() {
         browser.storage.local.set({masked_data: storage_data})
             .then((response) => {
                 console.log(`background.js: storage data saved: ${response}`);
-                set_masked_obj(JSON.stringify(storage_data)).then((response) => {
-                    console.log(response);
-                }).catch((error) => {
-                    console.error(error);
-                });
             }).catch((error) => {
                 console.error(error);
             });
@@ -79,13 +74,25 @@ function handle_install() {
     });
 
     handle_ctx_menus();
-
-
 }
 
 browser.runtime.onInstalled.addListener(handle_install);
 
 browser.runtime.onMessage.addListener(function(message, sender, senderResponse) {
+    var storage_data = {
+        lists: {
+            regexes: [],
+            secrets: [],
+        },
+        options: {
+            enable_regexes: true,
+            enable_secrets: true,
+            secrets_in_regex: false,
+            mask_emails: false,
+            mask_style: 0
+        }
+    };
+
     browser.storage.local.get()
         .then((response) => {
             storage_data = response.masked_data;

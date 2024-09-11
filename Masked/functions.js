@@ -24,10 +24,20 @@ function status_message(message) {
     $("#status").fadeOut(2000);
 }
 
-async function set_masked_obj(data) {
-    let storage_data = JSON.parse(data);
-    console.log(`storage data: ${storage_data}`);
-    console.log(`Saving masked_data to local storage: ${data}`);
+async function set_masked_obj() {
+    var storage_data = {
+        lists: {
+            regexes: [],
+            secrets: []
+        },
+        options: {
+            enable_regexes: true,
+            enable_secrets: true,
+            secrets_in_regex: false,
+            mask_emails: false,
+            mask_style: 0
+        }
+    };
 
     document.querySelectorAll('option[id^="lst_sec"]').forEach((opt) => {
         storage_data.lists.secrets.push(opt.value);
@@ -37,10 +47,11 @@ async function set_masked_obj(data) {
         storage_data.lists.regexes.push(opt.value);
     });
     
-    storage_data.options.mask_emails      = document.getElementById('option-mask-emails');
-    storage_data.options.secrets_in_regex = document.getElementById('option-id-in-regex');
-    storage_data.options.enable_regexes   = document.getElementById('option-enable-regex');
-    storage_data.options.enable_secrets   = document.getElementById('option-enable-secret');
+    
+    storage_data.options.mask_emails      = document.getElementById('option-mask-emails').checked;
+    storage_data.options.secrets_in_regex = document.getElementById('option-id-in-regex').checked;
+    storage_data.options.enable_regexes   = document.getElementById('option-enable-regex').checked;
+    storage_data.options.enable_secrets   = document.getElementById('option-enable-secret').checked;
 
     browser.storage.local.set({masked_data: storage_data})
         .then((response) => {
@@ -48,4 +59,8 @@ async function set_masked_obj(data) {
         }).catch((error) => {
             console.error(error);
         });
+    
+    console.log("Saved storage!!!");
+
+    return true;
 }

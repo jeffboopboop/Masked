@@ -1,19 +1,5 @@
 console.log("loaded handlers.js");
 
-let storage_data = {
-    lists: {
-        regexes: [],
-        secrets: [],
-    },
-    options: {
-        enable_regexes: true,
-        enable_secrets: true,
-        secrets_in_regex: false,
-        mask_emails: false,
-        mask_style: 0
-    }
-};
-
 document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
     function(e) {
         e.addEventListener("click",
@@ -22,14 +8,6 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
                 let target_list  = null;
                 let target_id    = null;
                 let list_sel     = null;
-                
-
-                browser.storage.local.get()
-                    .then((response) => {
-                        storage_data = response.masked_data;
-                    }).catch((error) => {
-                        console.error(error);
-                    });
             
                 if (b.target.id.match(/^secret/)) {
                     target_list = document.getElementById('secrets-list');
@@ -57,52 +35,46 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
             
                     status_message(`${count} items removed`);
                 } else if (b.target.id.match(/append$/)) {
+                    document.querySelectorAll('option[id^="lst_sec"]').forEach((opt) => {
+                        if (document.getElementById(list_sel).value == opt.value) {
+                            status_message(`Secret already exists`);
+                            return;
+                        }
+                    });
+
                     let lst_count = target_list.length;
                     let list_option = document.createElement('option');
 
                     list_option.id = `${target_id}${lst_count++}`;
                     list_option.name = list_option.id;
                     list_option.text = document.getElementById(list_sel).value;
+                    document.getElementById(list_sel).value = "";
                     
                     target_list.appendChild(list_option);
-                    
-                    browser.storage.local.set({masked_data: storage_data})
-                        .then((response) => {
-                            console.log(
-                                `Storage updated with ${response.masked_data.length} items`
-                            );
-                        }).catch((error) => {
-                            console.error(error);
-                        });
+                    status_message(`Secret added`);
                 } else if (b.target.id.match(/clear$/)) {
                     $(target_list).empty();
+                    status_message(`Secrets cleared`);
                 }
+
+                set_masked_obj().then(() => {
+                    console.log("Updating lists");
+                }).catch((error) => {
+                    console.error(error);
+                });
             }
         );
     }
 );
 
-/*$("option-id-in-regex").on("click", (e) => {
-    let cur_val = this.clicked;
-});
-*/
-document.getElementById("option-mask-emails").addEventListener("click", (e) => {
-    let storage_data = null;
-
-    browser.storage.local.get()
-        .then((response) => {
-           storage_data = response.masked_data;
-           storage_data.options.mask_emails = e.target.checked;
-
-           browser.storage.local.set({masked_data: storage_data})
-           .then((response) => {
-               console.log(response);
-           }).catch((error) => {
-               console.error(error);
-           });
+document.querySelectorAll('input[id^="option-"]').forEach((opt) => {
+    opt.addEventListener("click", () => {
+        set_masked_obj().then(() => {
+            console.log("Updating options");
         }).catch((error) => {
             console.error(error);
         });
+    });
 });
 
 document.querySelectorAll('a[id^="list-"]').forEach((e) => {

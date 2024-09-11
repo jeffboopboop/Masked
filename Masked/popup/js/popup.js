@@ -7,13 +7,34 @@ console.log("loaded popup.js");
         return;
     }
 
+    console.log("whoop whoop");
+
     window.hasRun = true;
+
+
+    var storage_data = {
+        lists: {
+            regexes: [],
+            secrets: [],
+        },
+        options: {
+            enable_regexes: true,
+            enable_secrets: true,
+            secrets_in_regex: false,
+            mask_emails: false,
+            mask_style: 0
+        }
+    };
 
     browser.storage.local.get()
         .then((response) => {
-            
+            console.log(response);
             let secrets_list  = document.getElementById('secrets-list');
             let regex_list    = document.getElementById('regex-list');
+
+            storage_data = response.masked_data;
+            storage_data.lists.regexes = response.masked_data.lists.regexes;
+            storage_data.lists.secrets = response.masked_data.lists.secrets;
 
             document.getElementById("option-id-in-regex").checked   = response.masked_data.options.secrets_in_regex;
             document.getElementById("option-mask-emails").checked   = response.masked_data.options.mask_emails;
