@@ -53,6 +53,7 @@
                     document.querySelectorAll(selector).forEach(
                         function(hit) {
                             found.push(hit);
+                            console.log(`Found secret ${hit}`);
                         }
                     );
                 });
@@ -63,6 +64,7 @@
                     storage_data.lists.secrets.forEach((s) => {
                         let temp_sec = `/${s}/g`;
                         storage_data.lists.regexes.push(temp_sec);
+                        console.log("Adding secrets to regex search");
                     });
                 }
 
@@ -76,6 +78,7 @@
                             if (input_val.match(regex)) {
                                 matched_regs++;
                                 found.push(i);
+                                console.log(`Found secret ${i}`);
                             }
                         }
                     });
@@ -108,8 +111,10 @@
                     f.before(holder);
                     f.type = 'password';
 
-                    $("a[id$=-masked").on("click", () => {
-                        navigator.clipboard.writeText($("#email-masked").next().val());
+                    $("a[id$=-masked").on("click", (e) => {
+                        console.log("this: ");
+                        console.log(e);
+                        navigator.clipboard.writeText(e.target.nextElementSibling.value);
                     });
                 }
             });
