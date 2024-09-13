@@ -1,28 +1,38 @@
 console.log("loaded functions.js");
 
-$.fn.sort_options = function() {
-    this.html(this.find('option').sort(function(a, b) {
-      return $(a).text() > $(b).text() ? 1 : $(a).text() < $(b).text() ? -1 : 0;
-    }));
+HTMLElement.prototype.sort_options = function() {
+    Array.prototype.slice.call(this.options).sort(function(a, b) {
+        return a.text > b.text ? 1 : a.text < b.text ? -1 : 0;
+    }).forEach(function(option, index) {
+        this.appendChild(option);
+    }, this);
 };
 
 function add_menu_badges() {
-        let secrets_list = document.getElementById("secrets-list");
-        let regexes_list = document.getElementById("regex-list");
+    let secret_menu_item = document.getElementById("list-secrets-list");
+    let regex_menu_item  = document.getElementById("list-regex-list");
+    let secrets_list     = document.getElementById("secrets-list");
+    let regexes_list     = document.getElementById("regex-list");
+    let secrets_badge = document.createElement('span');
+    let regex_badge = document.createElement('span');
 
-        let secret_menu_item = document.getElementById("list-secrets-list");
-        let regex_menu_item  = document.getElementById("list-regex-list");
-
-        let secrets_badge = document.createElement('span');
+    if (!document.getElementById('secrets-badge')) {
         secrets_badge.className = "badge text-bg-warning rounded-pill float-end";
         secrets_badge.innerText = secrets_list.length;
-
-        let regex_badge = document.createElement('span');
+        secrets_badge.id = 'secrets-badge';
+        secrets_badge.name = 'secrets-badge';
+        
         regex_badge.className = "badge text-bg-warning rounded-pill float-end";
         regex_badge.innerText = regexes_list.length;
-        
-        secret_menu_item.appendChild(secrets_badge);
-        regex_menu_item.appendChild(regex_badge);
+        regex_badge.id = 'regex-badge';
+        regex_badge.name = 'regex-badge';
+    } else {
+        document.getElementById('secrets-badge').innerText = secrets_list.length;
+        document.getElementById('regex-badge').innerText = regex_list.length;
+    }
+
+    secret_menu_item.appendChild(secrets_badge);
+    regex_menu_item.appendChild(regex_badge);
 }
 
 function status_message(message) {
@@ -34,8 +44,9 @@ function status_message(message) {
 async function populate_popup() {
     browser.storage.local.get()
         .then((response) => {
-            let secrets_list  = $("#secrets-list");
-            let regex_list    = $("#regex-list");
+            let secrets_list  = document.getElementById("secrets-list");
+            let regex_list    = document.getElementById("regex-list");
+
 
             document.getElementById("option-id-in-regex").checked   = response.masked_data.options.secrets_in_regex;
             document.getElementById("option-mask-emails").checked   = response.masked_data.options.mask_emails;
@@ -47,7 +58,7 @@ async function populate_popup() {
                 list_option.id = `lst_sec_${i}`;
                 list_option.name = `lst_sec_${i}`;
                 list_option.text = response.masked_data.lists.secrets[i];
-                secrets_list.append(list_option);
+                secrets_list.appendChild(list_option);
             };
 
             for (let i=0; i<response.masked_data.lists.regexes.length - 1; i++) {
@@ -55,10 +66,9 @@ async function populate_popup() {
                 list_option.id = `lst_rgx_${i}`;
                 list_option.name = `lst_rgx_${i}`;
                 list_option.text = response.masked_data.lists.regexes[i];
-                regex_list.append(list_option);
+                regex_list.appendChild(list_option);
             };
-            regex_list.sort_options();
-            secrets_list.sort_options();
+            
             add_menu_badges();
         }).catch((error) => {
             console.error(error)
@@ -97,7 +107,10 @@ async function set_masked_obj() {
 
     document.querySelectorAll('option[id^="lst_rgx"]').forEach((opt) => {
         storage_data.lists.regexes.push(opt.value);
-    });    
+    });
+
+    storage_data.lists.regexes.sort();
+    storage_data.lists.secrets.sort();
     
     storage_data.options.mask_emails      = document.getElementById('option-mask-emails').checked;
     storage_data.options.secrets_in_regex = document.getElementById('option-id-in-regex').checked;

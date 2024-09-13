@@ -10,6 +10,46 @@ console.log("loaded popup.js");
     window.hasRun = true;
 
     populate_popup();
+
+    
 })();
 
-//add_menu_badges();
+const Default = {
+    scrollbarTheme: "os-theme-dark",
+    scrollbarClickScroll: true,
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    const popup_lists  = document.querySelectorAll('div[id^="list-"]');
+    const content_div  = document.getElementById('nav-tabContent');
+    
+    popup_lists.forEach((e) => {
+        if (e && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined") {
+            OverlayScrollbarsGlobal.OverlayScrollbars(e, {
+                scrollbars: {
+                    theme: Default.scrollbarTheme,
+                    clickScroll: Default.scrollbarClickScroll,
+                },
+                overflow: {
+                    x: 'hidden',
+                    y: 'auto'
+                }
+            });
+        }
+    });
+
+    if (content_div && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined") {
+        OverlayScrollbarsGlobal.OverlayScrollbars(content_div, {
+            scrollbars: {
+                theme: Default.scrollbarTheme,
+                clickScroll: Default.scrollbarClickScroll,
+            },
+            overflow: {
+                x: 'hidden',
+                y: 'auto'
+            }
+        });
+    }
+
+
+});

@@ -44,6 +44,7 @@ function handle_install() {
             .then(response => response.text())
             .then(data => {
                 storage_data.lists.regexes = data.split('\n');
+                storage_data.lists.regexes.sort();
             }
         ).catch((error) =>
             console.error(error)
@@ -53,6 +54,7 @@ function handle_install() {
             .then(response => response.text())
             .then(data => {
                 storage_data.lists.secrets = data.split('\n');
+                storage_data.lists.secrets.sort();
                 console.log("background.js: loaded secrets");
             }
         ).catch((error) => {
@@ -103,9 +105,6 @@ browser.runtime.onMessage.addListener(function(message, sender, senderResponse) 
     );
 
     if (message.masked_cmd == "get_lists") {
-        console.log(message);
-        console.log(sender);
-
         if (message.sender == "masked.js" && sender.tab.active == true) {
             let tab_id = sender.tab.id;
             const reply_msg = browser.tabs.sendMessage(tab_id, storage_data);
@@ -122,8 +121,8 @@ browser.runtime.onMessage.addListener(function(message, sender, senderResponse) 
         return true;
     }
 
-    if (message.masked_cmd == "update_badge") {
+    if (message.masked_cmd == "update_badge" && message.sender == 'masked.js') {
         browser.action.setBadgeBackgroundColor(255, 0, 0);
-        browser.action.setBadgeText(message.count);
+        browser.action.setBadgeText(message.value);
     }
 });

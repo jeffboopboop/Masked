@@ -50,8 +50,8 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
                     list_option.id = `${target_id}${lst_count++}`;
                     list_option.name = list_option.id;
                     list_option.text = document.getElementById(list_sel).value;
-                    document.getElementById(list_sel).value = "";
                     
+                    document.getElementById(list_sel).value = "";
                     target_list.appendChild(list_option);
 
                     status_message(`Secret added`);
@@ -59,8 +59,6 @@ document.querySelectorAll("button[id^='secret'], button[id^='regex']").forEach(
                     $(target_list).empty();
                     status_message(`Secrets cleared`);
                 }
-
-
 
                 set_masked_obj().then(() => {
                     console.log("Updating lists");
