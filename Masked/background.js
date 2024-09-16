@@ -122,7 +122,8 @@ browser.runtime.onMessage.addListener(function(message, sender, senderResponse) 
     }
 
     if (message.masked_cmd == "update_badge" && message.sender == 'masked.js') {
-        browser.action.setBadgeBackgroundColor(255, 0, 0);
-        browser.action.setBadgeText(message.value);
+        let str = `${message.value}`;
+        browser.action.setBadgeBackgroundColor({ color: "yellow"});
+        browser.action.setBadgeText({text: str});
     }
 });

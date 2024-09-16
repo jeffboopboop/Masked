@@ -42,11 +42,15 @@
 						<i class="bi bi-braces-asterisk"></i> Regex
 					</a>
 
-					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings" style="z-index: 100;">
+					<a class="list-group-item list-group-item-action" id="list-elements-list" data-bs-toggle="list" href="#list-elements" role="tab" aria-controls="list-elements">
+						<i class="bi bi-bar-chart-steps"></i> Elements
+					</a>
+
+					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">
 						<i class="bi bi-sliders"></i> Settings
 					</a>
 
-					<a class="list-group-item list-group-item-action d-flex-inline" id="list-credits-list" data-bs-toggle="list" href="#list-credits" role="tab" aria-controls="list-credits">
+					<a class="list-group-item list-group-item-action" id="list-credits-list" data-bs-toggle="list" href="#list-credits" role="tab" aria-controls="list-credits">
 						<i class="bi bi-blockquote-left"></i> Credits
 					</a>
 				</div>
@@ -61,7 +65,7 @@
 						no longer worry about shoulder-surfers, or people watching your streams.
 					</div>
 
-					<div class="tab-pane fade overflow-auto overflow-x-hidden" id="list-secrets" role="tabpanel" aria-labelledby="list-secrets-list" style="min-height: 400px; max-height: 400px;">
+					<div class="tab-pane fade overflow-hidden" id="list-secrets" role="tabpanel" aria-labelledby="list-secrets-list" style="min-height: 400px; max-height: 400px;">
 						<div class="row mb-3 me-4 mt-3">
 							<div class="col">
 								<div class="input-group">
@@ -87,7 +91,7 @@
 						</div>
 					</div>
 			  
-					<div id="list-regex" class="tab-pane fade overflow-auto" role="tabpanel" aria-labelledby="list-regex-list" style="min-height: 400px; max-height: 400px;">
+					<div id="list-regex" class="tab-pane fade overflow-hidden" role="tabpanel" aria-labelledby="list-regex-list" style="min-height: 400px; max-height: 400px;">
 						<div class="row mb-3 me-4 mt-3">
 							<div class="col">
 								<div class="input-group">
@@ -113,17 +117,63 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="tab-pane fade" id="list-elements" role="tabpanel" aria-labelledby="list-elements-list" style="min-height: 400px; max-height: 400px;">
+						<div class="row mb-3">
+							<div class="col border">
+								<select id="secret-element-list" name="secret-element-list" class="form-select" size="10" aria-label="Regex" multiple></select>
+								<div class="input-group">
+									<span class="input-group-text text-bg-secondary">-></span>
+									<input id="add-secret-element" name="add-secret-element" type="text" class="form-control" />
+								</div>
+							</div>
+							<div class="col border">
+								<select id="regex-element-list" name="regex-element-list" class="form-select" size="10" aria-label="Regex Element" multiple></select>
+								<div class="input-group">
+									<span class="input-group-text text-bg-secondary">-></span>
+									<input id="add-regex-element" name="add-regex-element" type="text" class="form-control" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col text-center">
+								<div class="btn-group btn-group-sm" role="group" aria-label="Secrets Group">
+									<button id="ele-append" name="ele-append" class="btn btn-success" type="button">Append</button>
+									<button id="ele-clear"  name="ele-clear"  class="btn btn-warning" type="button">Clear</button>
+									<button id="ele-remove" name="ele-remove" class="btn btn-danger"  type="button">Remove</button>
+								</div>
+							</div>
+						</div>
+					</div>
 			
-					<div class="tab-pane fade overflow-auto" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list" style="min-height: 400px; max-height: 400px; width: 503px;" >
+					<div class="tab-pane fade overflow-hidden" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list" style="min-height: 400px; max-height: 400px; width: 503px;" >
+						<div class="row">
+							<p class="lead">Settings</p>
+						</div>
+
 						<div class="row mb-3 me-4 mt-3">
 							<div class="col">
 								<div class="form-check form-switch">
-									<input id="option-id-in-regex" name="option-id-in-regex" class="form-check-input" type="checkbox" role="switch">
-									<label class="form-check-label" for="option-id-in-regex">Include Secrets in Regex Search</label>
+									<input id="option-secrets-in-regex" name="option-secrets-in-regex" class="form-check-input" type="checkbox" role="switch">
+									<label class="form-check-label" for="option-secrets-in-regex">Include Secrets in Regex Search</label>
 								</div>
 
 								<small style="font-size: 10px;">
 									Any secrets which are to be searched for in ID's, will also be added to the regex list
+								</small>
+							</div>
+						</div>
+
+						<div class="row mb-3 me-4 mt-3">
+							<div class="col">
+								<div class="form-check form-switch">
+									<input id="option-regex-in-secrets" name="option-regex-in-secrets" class="form-check-input" type="checkbox" role="switch">
+									<label class="form-check-label" for="option-regex-in-secrets">Include Regex in Secrets Search</label>
+								</div>
+
+								<small style="font-size: 10px;">
+									Any regex which are to be searched for in ID's, will also be added to the secrets list
 								</small>
 							</div>
 						</div>
@@ -149,7 +199,7 @@
 								</div>
 
 								<small style="font-size: 10px;">
-									Enables the regex functionality which allows you to search more fields, with more matching capabilities
+									Enables the regex functionality which allows you to search more elements, with more matching capabilities
 								</small>
 							</div>
 						</div>

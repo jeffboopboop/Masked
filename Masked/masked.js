@@ -38,13 +38,24 @@ async function init() {
     do_masks(storage_data);
 }
 
-init();
+(() => {
+    if (window.hasRun) {
+        console.log("popup.js already ran, bailing");
+        return;
+    }
+
+    window.hasRun = true;
+    init();
+})();
+
 
 async function do_masks(storage_data) {
     let found = [];
+    let secrets = storage_data.lists.secrets;
+    let regexes = storage_data.lists.regexes;
     
     if (storage_data.options.enable_secrets === true) {
-        storage_data.lists.secrets.forEach(function(secret) {
+        secrets.forEach(function(secret) {
             if (storage_data.options.mask_emails === false && secret.match(/email/)) {
                 return;
             }
@@ -60,8 +71,8 @@ async function do_masks(storage_data) {
         });
     }
 
-    if (storage_data.options.enable_regexes === true) {
-        if (storage_data.options.secrets_in_regex === true) {
+    if (storage_data.options.enable_regexes) {
+        if (storage_data.options.secrets_in_regex) {
             storage_data.lists.secrets.forEach((s) => {
                 let temp_sec = `/${s}/g`;
                 storage_data.lists.regexes.push(temp_sec);
@@ -69,14 +80,20 @@ async function do_masks(storage_data) {
             });
         }
 
+        if (storage_data.options.regex_in_secrets) {
+
+        }
+
         storage_data.lists.regexes.forEach((regex) => {
-            document.querySelectorAll("input,div").forEach(function(i) {
+            document.querySelectorAll("input, div, span").forEach(function(i) {
                 var input_val = i.value;
                 var input_len = i.length;
                 var input_type = i.type;
 
                 if (input_len > 3 && input_type != "password" && input_type != "hidden") {
-                    if (input_val.match(regex)) {
+                    let rgx = new RegExp(regex, "igm");
+
+                    if (input_val.match(rgx)) {
                         matched_regs++;
                         found.push(i);
                         console.log(`Found secret ${i}`);
@@ -88,6 +105,7 @@ async function do_masks(storage_data) {
 
     found.forEach((f) => {
         let holder = document.createElement("a");
+        
         holder.id = f.id + '-masked';
         holder.innerHTML = '🧐';
         holder.style.top = '51%';
@@ -108,7 +126,8 @@ async function do_masks(storage_data) {
                 }
                 break;
             case 'div':
-                holder.setAttribute('value', f.value);
+                holder.setAttribute('value', f.textContent);
+                f.textContent = "*".repeat(f.textContent.length);
                 break;
             default:
                 holder.value = f.value;
@@ -116,6 +135,15 @@ async function do_masks(storage_data) {
         }
         f.before(holder);
     });
+
+    regex.forEach((r) => {
+        let found = [];
+        
+        if (document.body.innerText.matchAll(r)) {
+            
+        }
+    });
+    
 
     let update_icon = await browser.runtime.sendMessage({
         "masked_cmd": "update_badge",

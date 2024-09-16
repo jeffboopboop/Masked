@@ -48,7 +48,7 @@ async function populate_popup() {
             let regex_list    = document.getElementById("regex-list");
 
 
-            document.getElementById("option-id-in-regex").checked   = response.masked_data.options.secrets_in_regex;
+            document.getElementById("option-secrets-in-regex").checked   = response.masked_data.options.secrets_in_regex;
             document.getElementById("option-mask-emails").checked   = response.masked_data.options.mask_emails;
             document.getElementById("option-enable-regex").checked  = response.masked_data.options.enable_regexes;
             document.getElementById("option-enable-secret").checked = response.masked_data.options.enable_secrets;
@@ -70,6 +70,8 @@ async function populate_popup() {
             };
             
             add_menu_badges();
+            
+            return true;
         }).catch((error) => {
             console.error(error)
         }
@@ -113,7 +115,7 @@ async function set_masked_obj() {
     storage_data.lists.secrets.sort();
     
     storage_data.options.mask_emails      = document.getElementById('option-mask-emails').checked;
-    storage_data.options.secrets_in_regex = document.getElementById('option-id-in-regex').checked;
+    storage_data.options.secrets_in_regex = document.getElementById('option-secrets-in-regex').checked;
     storage_data.options.enable_regexes   = document.getElementById('option-enable-regex').checked;
     storage_data.options.enable_secrets   = document.getElementById('option-enable-secret').checked;
 
