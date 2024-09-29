@@ -15,7 +15,7 @@
             "request": "launch",
             "reAttach": true,
             "addonPath": "${workspaceFolder}",
-            "firefoxExecutable": "C:\\Program Files\\Firefox Developer Edition\\firefox.exe"
+            "firefoxExecutable": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
         },
         {
             "name": "Launch Chrome",

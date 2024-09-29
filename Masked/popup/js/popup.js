@@ -1,14 +1,17 @@
-'use strict';
-console.log("loaded popup.js");
+console.log(Date.now() + " " + document.currentScript.src);
+var focused_list = null;
+
+populate_popup();
+
 
 (() => {
     if (window.hasRun) {
-        console.log("popup.js already ran, bailing");
+        status_message("popup.js already ran, bailing");
         return;
     }
 
     window.hasRun = true;
-    populate_popup();   
+    
 })();
 
 const Default = {
@@ -19,8 +22,8 @@ const Default = {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    const container = document.querySelector('#masked-container');
-    
+    const container = document.querySelector('#settings-pane');
+
     if (container && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined") {
         OverlayScrollbarsGlobal.OverlayScrollbars(container, {
             scrollbars: {
@@ -33,4 +36,5 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
 });

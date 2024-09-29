@@ -40,8 +40,6 @@
 
     "background": {
         "scripts": [
-            "Masked/handlers.js",
-            "Masked/functions.js",
             "Masked/background.js"            
         ]
     },

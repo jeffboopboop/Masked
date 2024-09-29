@@ -1,89 +1,93 @@
-'use strict';
-console.log("loaded masked.js");
-
-async function init() {
-    let storage_data = {
+var storage_data = {
+    lists: {
         regexes: [],
         secrets: [],
-        options: {
-            enable_regexes: true,
-            enable_secrets: true,
-            secrets_in_regex: false,
-            mask_emails: false,
-            mask_style: 0
-        }
-    };
+        regex_elements: [],
+        secret_elements: []
+    },
 
+    options: {
+        dark_mode: "light",
+        enable_regexes: true,
+        enable_secrets: true,
+        secrets_in_regex: false,
+        regex_in_secrets: false,
+        mask_emails: false,
+        mask_ip_addr: false,
+        mask_style: 0
+    }
+};
+
+async function init() {
+    console.log(
+        '%c%c﴾%c░%c▒%c Masked%cInitialized %c▒%c░%c﴿',
+            'text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;',
+            'color:#fff; font-weight:999',
+            'color:#383838; background-color:#383838; font-weight:999;',
+            'color:#121212; background-color:#121212; font-weight:999;',
+            'text-shadow: 1px 1px 2px white, 0 0 1em aliceblue; color:#000; background-color:#0d6efd; font-weight:999;',
+            'text-shadow: 1px 1px 1px aliceblue, 0 0 1.1em white; color:#0d6efd; background-color:#000; font-weight:100;',
+            'color:#121212; background-color:#121212; font-weight:999;',
+            'color:#383838; background-color:#383838; font-weight:999;',
+            'color:#fff; font-weight:999'
+    );
+    
     try {
         let data = await browser.storage.local.get();
         storage_data = data.masked_data;
     } catch (error) {
         console.error(error);
     }
-
-    if (!storage_data.lists.regexes.length) {
-        try {
-            let response = await browser.runtime.sendMessage({
-                "masked_cmd": "get_lists",
-                "sender": "masked.js"
-            });
-
-            storage_data = response.masked_data;
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    document.head.append('a.masked { position: relative; top: 50%; z-index: 2; div,input.maskedparent { position: relative;  z-index: 1; }');
-    do_masks(storage_data);
+    
+    do_masks();
 }
 
-(() => {
-    if (window.hasRun) {
-        console.log("popup.js already ran, bailing");
-        return;
-    }
+init();
 
-    window.hasRun = true;
-    init();
-})();
-
-
-async function do_masks(storage_data) {
+async function do_masks() {
     let found = [];
     let secrets = storage_data.lists.secrets;
     let regexes = storage_data.lists.regexes;
-    
+    let elements = document.querySelectorAll("*");
+    let sec_elements = document.getElementById("secret-element-list");
+
     if (storage_data.options.enable_secrets === true) {
+        if (storage_data.options.regex_in_secrets) {
+            regexes.forEach((r) => {
+                let temp_rgx = `/${r}/g`;
+                secrets.push(temp_rgx);
+                status_message("Adding regex to secrets search");
+            });
+        }
+
         secrets.forEach(function(secret) {
+            
             if (storage_data.options.mask_emails === false && secret.match(/email/)) {
                 return;
+            }           
+            
+            if (storage_data.options.regex_in_secrets) {
+                secrets = [...secrets, ...regexes];
+                document.querySelectorAll("*").forEach(
+                    function(hit) {
+                        found.push(hit);
+                        status_message(`Found secret ${hit}`);
+                    }
+                );
             }
 
-            let selector = '[id*="' + secret + '"]';
-
-            document.querySelectorAll(selector).forEach(
-                function(hit) {
-                    found.push(hit);
-                    console.log(`Found secret ${hit}`);
-                }
-            );
+            selector = '[id*="' + secret + '"]';
         });
     }
 
     if (storage_data.options.enable_regexes) {
         if (storage_data.options.secrets_in_regex) {
-            storage_data.lists.secrets.forEach((s) => {
+            secrets.forEach((s) => {
                 let temp_sec = `/${s}/g`;
-                storage_data.lists.regexes.push(temp_sec);
-                console.log("Adding secrets to regex search");
+                regexes.push(temp_sec);
+                status_message("Adding secrets to regex search");
             });
         }
-
-        if (storage_data.options.regex_in_secrets) {
-
-        }
-
         storage_data.lists.regexes.forEach((regex) => {
             document.querySelectorAll("input, div, span").forEach(function(i) {
                 var input_val = i.value;
@@ -96,7 +100,7 @@ async function do_masks(storage_data) {
                     if (input_val.match(rgx)) {
                         matched_regs++;
                         found.push(i);
-                        console.log(`Found secret ${i}`);
+                        status_message(`Found secret ${i}`);
                     }
                 }
             });
@@ -120,7 +124,7 @@ async function do_masks(storage_data) {
                     f.type = 'password';
 
                     holder.addEventListener("click", (e) => {
-                        console.log(e);
+                        status_message(e);
                         navigator.clipboard.writeText(e.target.nextElementSibling.value);
                     });
                 }
@@ -136,7 +140,7 @@ async function do_masks(storage_data) {
         f.before(holder);
     });
 
-    regex.forEach((r) => {
+    regexes.forEach((r) => {
         let found = [];
         
         if (document.body.innerText.matchAll(r)) {
@@ -144,7 +148,6 @@ async function do_masks(storage_data) {
         }
     });
     
-
     let update_icon = await browser.runtime.sendMessage({
         "masked_cmd": "update_badge",
         "sender": "masked.js",

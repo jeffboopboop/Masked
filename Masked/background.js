@@ -1,4 +1,22 @@
-console.log("loaded background.js");
+console.log(Date.now() + " " + document.currentScript.src);
+
+var storage_data = {
+    lists: {
+        regexes: [],
+        secrets: [],
+        regex_elements: [],
+        secret_elements: []
+    },
+    options: {
+        dark_mode: "light",
+        enable_regexes: true,
+        enable_secrets: true,
+        secrets_in_regex: false,
+        regex_in_secrets: false,
+        mask_emails: false,
+        mask_style: 0
+    }
+};
 
 function handle_ctx_menus() {
     browser.contextMenus.create({
@@ -11,33 +29,28 @@ function handle_ctx_menus() {
             id: "ctx_regex_matching",
             title: "Enable Regex Matching",
             contexts: ["action"]
-            //onclick: enable_regexes()
     });
 
     browser.contextMenus.create({
             id: "ctx_secret_matching",
             title: "Enable Secret Matching",
             contexts: ["action"]
-            //onclick: enable_secrets()
     });
 }
 
 function handle_install() {
-    console.log("Extension installed");
-
-    var storage_data = {
-        lists: {
-            regexes: [],
-            secrets: [],
-        },
-        options: {
-            enable_regexes: true,
-            enable_secrets: true,
-            secrets_in_regex: false,
-            mask_emails: false,
-            mask_style: 0
-        }
-    };
+    console.log(
+        '%c%c﴾%c░%c▒%c Masked%cInstalled %c▒%c░%c﴿',
+            'text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;',
+            'color:#fff; font-weight:999',
+            'color:#383838; background-color:#383838; font-weight:999;',
+            'color:#121212; background-color:#121212; font-weight:999;',
+            'text-shadow: 1px 1px 2px white, 0 0 1em aliceblue; color:#000; background-color:#0d6efd; font-weight:999;',
+            'text-shadow: 1px 1px 1px aliceblue, 0 0 1.1em white; color:#0d6efd; background-color:#000; font-weight:100;',
+            'color:#121212; background-color:#121212; font-weight:999;',
+            'color:#383838; background-color:#383838; font-weight:999;',
+            'color:#fff; font-weight:999'
+    );
 
     const all_promises = [
         fetch(browser.runtime.getURL('Masked/resources/regexes.txt'))
@@ -45,6 +58,7 @@ function handle_install() {
             .then(data => {
                 storage_data.lists.regexes = data.split('\n');
                 storage_data.lists.regexes.sort();
+                console.log("Installed" + storage_data);
             }
         ).catch((error) =>
             console.error(error)
@@ -64,13 +78,8 @@ function handle_install() {
 
     Promise.all(all_promises).then(() => {
         console.log("background.js: all fetches complete, adding initial storage data");
-        
         browser.storage.local.set({masked_data: storage_data})
-            .then((response) => {
-                console.log(`background.js: storage data saved: ${response}`);
-            }).catch((error) => {
-                console.error(error);
-            });
+            .catch((error) => { console.error(error); });
     }).catch((error) => {
         console.error(error);
     });
@@ -81,31 +90,8 @@ function handle_install() {
 browser.runtime.onInstalled.addListener(handle_install);
 
 browser.runtime.onMessage.addListener(function(message, sender, senderResponse) {
-    var storage_data = {
-        lists: {
-            regexes: [],
-            secrets: [],
-        },
-        options: {
-            enable_regexes: true,
-            enable_secrets: true,
-            secrets_in_regex: false,
-            mask_emails: false,
-            mask_style: 0
-        }
-    };
-
-    browser.storage.local.get()
-        .then((response) => {
-            storage_data = response.masked_data;
-            console.log(`background.js: in regexes, got back data: ${response}`);
-        }).catch((error) => {
-            console.error(`background.js: ${error}`);
-        }
-    );
-
     if (message.masked_cmd == "get_lists") {
-        if (message.sender == "masked.js" && sender.tab.active == true) {
+        if (message.sender == "masked.js") {
             let tab_id = sender.tab.id;
             const reply_msg = browser.tabs.sendMessage(tab_id, storage_data);
 
