@@ -96,12 +96,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll('input[id^="option-"]').forEach((opt) => {
+        console.log(`Option: ${opt.id} - ${opt.checked}`);
         opt.addEventListener("click", () => {
-            set_masked_obj().then(() => {
+            console.log(`Option: ${opt.id} - ${opt.checked} CLICKED`);
+                browser.storage.local.set({ masked_data: storage_data}).then(() => {
                 status_message("Updating options");
             }).catch((error) => {
                 console.error(error);
             });
+        });
+    });
+
+    document.querySelectorAll('a[id^="suggestion-type-"]').forEach((opt) => {
+        opt.addEventListener("click", (choice) => {
+            let suggest_button = document.getElementById('suggestion-dropdown');
+            suggest_button.textContent = choice.target.textContent;
+            document.getElementById('suggestion-example-url').style.display = '';
         });
     });
 

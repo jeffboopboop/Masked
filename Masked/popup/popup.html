@@ -33,7 +33,7 @@
 		<div class="row mb-3">
 			<div class="col-4 me-1">
 				<div id="list-tab" class="list-group"  style="border-top-left-radius: 0%;" role="tablist">
-					<a class="list-group-item list-group-item-action border border-black active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
+					<a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
 						<i class="bi bi-house me-2"></i> Home
 					</a>
 					<a class="list-group-item list-group-item-action" id="list-secrets-list" data-bs-toggle="list" href="#list-secrets" role="tab" aria-controls="list-secrets">
@@ -49,6 +49,10 @@
 
 					<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">
 						<i class="bi bi-sliders me-2"></i> Settings
+					</a>
+
+					<a class="list-group-item list-group-item-action" id="list-suggestions-list" data-bs-toggle="list" href="#list-suggestions" role="tab" aria-controls="list-suggestions">
+						<i class="bi bi-chat-heart"></i> Suggestions
 					</a>
 
 					<a class="list-group-item list-group-item-action" id="list-credits-list" data-bs-toggle="list" href="#list-credits" role="tab" aria-controls="list-credits">
@@ -289,6 +293,31 @@
 									<small><a href="https://github.com/SecLists">SecLists (ID's)</a></small>
 								</div>
 							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="list-suggestions" role="tabpanel" aria-labelledby="list-suggestions-list" style="min-height: 400px; max-height: 400px;">
+						<div class="row">
+							<div class="col mt-3">
+								<div class="input-group mb-3">
+									<button id="suggestion-dropdown" class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Type&nbsp;&nbsp;
+									</button>
+									<ul class="dropdown-menu">
+										<li><a id="suggestion-type-regex"  class="dropdown-item" href="#">Regex&nbsp;&nbsp;</a></li>
+								  		<li><a id="suggestion-type-secret" class="dropdown-item" href="#">Secret&nbsp;&nbsp;</a></li>
+								  		<li><a id="suggestion-type-other"  class="dropdown-item" href="#">Other&nbsp;&nbsp;</a></li>
+									</ul>
+									<input type="text" class="form-control" aria-label="wat">
+							  	</div>
+							</div>
+
+							<div id="suggestion-example-url" class="input-group mb-3" style="display: none;">
+								<span class="input-group-text" id="example-url">Example</span>
+								<input type="text" class="form-control" placeholder="https://example.com/?page_id=372" aria-label="Example" aria-describedby="example-url">
+								<small class="input-group ms-1" style="font-size: 10px;">A URL where the suggestion can be seen (for regex/secret validation)</small>
+							</div>
+							
 						</div>
 					</div>
 				</div>
